@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "trivia-maze-shooter.sln"
+    "dotnet.defaultSolution": "trivia-maze-shooter.slnx"
 }
