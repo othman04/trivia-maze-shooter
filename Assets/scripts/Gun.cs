@@ -13,6 +13,8 @@ public class Gun : MonoBehaviour
     public Transform bulletSpawnPoint;
     public GameObject muzzleFlashEffect; // <-- AJOUT : L'effet visuel de tir (particules)
 
+
+
     [Header("Reload Animation Offsets")]
     [SerializeField] private Vector3 reloadRotationOffset = new Vector3(66, 50, 50); 
 
@@ -70,6 +72,8 @@ public class Gun : MonoBehaviour
         // CORRECTION : On passe la flèche bleue (forward) du canon en paramètre
         spawnedBullet.Launch(bulletSpawnPoint.forward); 
     }
+    StopCoroutine(nameof(Recoil));
+    StartCoroutine(nameof(Recoil));
 }
 
     IEnumerator Reload()
@@ -107,27 +111,27 @@ public class Gun : MonoBehaviour
         StartCoroutine(Reload());
     }
 
-    private IEnumerator Recoil()
-    {
-        Vector3 recoilTarget = initialPosition + new Vector3(0, 0, -recoilDistance);
-        float t = 0f;
+    // private IEnumerator Recoil()
+    // {
+    //     Vector3 recoilTarget = initialPosition + new Vector3(0, 0, -recoilDistance);
+    //     float t = 0f;
 
-        while (t < 1f)
-        {
-            t += Time.deltaTime ;;
-            transform.localPosition = Vector3.Lerp(initialPosition, recoilTarget, t);
-            yield return null;
-        }
-        t = 0f;
-        while (t < 1f)
-        {
-            t += Time.deltaTime * recoilSpeed;
-            transform.localPosition = Vector3.Lerp(recoilTarget, initialPosition, t);
-            yield return null;
-        }
+    //     while (t < 1f)
+    //     {
+    //         t += Time.deltaTime ;;
+    //         transform.localPosition = Vector3.Lerp(initialPosition, recoilTarget, t);
+    //         yield return null;
+    //     }
+    //     t = 0f;
+    //     while (t < 1f)
+    //     {
+    //         t += Time.deltaTime * recoilSpeed;
+    //         transform.localPosition = Vector3.Lerp(recoilTarget, initialPosition, t);
+    //         yield return null;
+    //     }
 
-        transform.localPosition = initialPosition; // Assure que la position est exactement réinitialisée à la fin
-    }
+    //     transform.localPosition = initialPosition; // Assure que la position est exactement réinitialisée à la fin
+    // }
 
 
 }
