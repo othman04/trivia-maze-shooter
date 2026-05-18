@@ -23,6 +23,10 @@ public class Gun : MonoBehaviour
     private Quaternion initialRotation;
     private Vector3 initialPosition;
 
+    public float recoilDistance = 0.1f; 
+    public float recoilSpeed = 15f;
+
+
     void Start()
     {
         currentAmmo = magSize;
@@ -58,10 +62,13 @@ public class Gun : MonoBehaviour
     }
 
     // Lancement de la balle (reste inchangé)
+    // Dans le script Gun.cs, à l'intérieur de la méthode Shoot() :
     if (bullet != null && bulletSpawnPoint != null)
     {
         Bullet spawnedBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        spawnedBullet.Launch();
+        
+        // CORRECTION : On passe la flèche bleue (forward) du canon en paramètre
+        spawnedBullet.Launch(bulletSpawnPoint.forward); 
     }
 }
 
@@ -99,4 +106,28 @@ public class Gun : MonoBehaviour
             return;
         StartCoroutine(Reload());
     }
+
+    private IEnumerator Recoil()
+    {
+        Vector3 recoilTarget = initialPosition + new Vector3(0, 0, -recoilDistance);
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime ;;
+            transform.localPosition = Vector3.Lerp(initialPosition, recoilTarget, t);
+            yield return null;
+        }
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * recoilSpeed;
+            transform.localPosition = Vector3.Lerp(recoilTarget, initialPosition, t);
+            yield return null;
+        }
+
+        transform.localPosition = initialPosition; // Assure que la position est exactement réinitialisée à la fin
+    }
+
+
 }

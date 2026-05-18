@@ -16,21 +16,22 @@ public class Bullet : MonoBehaviour
     }
 
     // Cette fonction sera appelée par le script Gun lors du tir
-    public void Launch()
+    public void Launch(Vector3 directionDuTir)
+{
+    gameObject.SetActive(true);
+
+    if (rb != null)
     {
-        // 1. On active l'objet
-        gameObject.SetActive(true);
-
-        // 2. On désactive la physique pour la phase de tir initial (évite les collisions immédiates)
-        if (rb != null)
-        {
-            rb.isKinematic = false; // Assurez-vous qu'il est en mode dynamique
-            rb.linearVelocity = transform.forward * speed; // CORRIGÉ : forward (pas -forward)
-        }
-
-        // 3. On programme sa destruction
-        Destroy(gameObject, lifeTime);
+        rb.isKinematic = false;
+        
+        // CORRECTION : On force la direction de la vitesse avec la vraie direction du canon, 
+        // et on aligne le visuel de la balle pour qu'il regarde dans cette direction.
+        rb.linearVelocity = directionDuTir * speed;
+        transform.forward = directionDuTir; 
     }
+
+    Destroy(gameObject, lifeTime);
+}
 
     private void OnCollisionEnter(Collision collision)
     {
