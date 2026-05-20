@@ -5,37 +5,61 @@ public class Bullet : MonoBehaviour
     [Header("Settings")]
     public float speed = 20f;
     public float lifeTime = 3f;
+    public float damage = 25f; // <-- AJOUT : Dégâts infligés par la balle
 
     private Rigidbody rb;
 
     void Awake()
     {
-        // On récupère le Rigidbody tôt (Awake) car Start ne sera pas
-        // appelé tant que la balle n'est pas activée.
         rb = GetComponent<Rigidbody>();
     }
 
-    // Cette fonction sera appelée par le script Gun lors du tir
     public void Launch(Vector3 directionDuTir)
-{
-    gameObject.SetActive(true);
-
-    if (rb != null)
     {
-        rb.isKinematic = false;
-        
-        // CORRECTION : On force la direction de la vitesse avec la vraie direction du canon, 
-        // et on aligne le visuel de la balle pour qu'il regarde dans cette direction.
-        rb.linearVelocity = directionDuTir * speed;
-        transform.forward = directionDuTir; 
+        gameObject.SetActive(true);
+
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.linearVelocity = directionDuTir * speed;
+            transform.forward = directionDuTir; 
+        }
+
+        Destroy(gameObject, lifeTime);
     }
 
-    Destroy(gameObject, lifeTime);
-}
-
+    // Si votre collider de balle N'EST PAS en "Is Trigger"
     private void OnCollisionEnter(Collision collision)
     {
-        // Vous pouvez ajouter des effets de particules ou des sons ici
-        Destroy(gameObject);
+        HandleCollision(collision.gameObject);
+    }
+
+    // Si votre collider de balle EST en "Is Trigger"
+    private void OnTriggerEnter(Collider other)
+    {
+        HandleCollision(other.gameObject);
+    }
+
+    // Gestion unique des impacts
+    void HandleCollision(GameObject hitObject)
+    {
+        // On vérifie si l'objet touché est un ennemi
+        if (hitObject.CompareTag("Enemy"))
+        {
+            // On essaie de récupérer le script de vie sur l'ennemi
+            EnemyHealth enemyHealth = hitObject.GetComponent<EnemyHealth>();
+            
+            if (enemyHealth != null)
+            {
+                // On lui inflige les dégâts !
+                enemyHealth.TakeDamage(damage);
+            }
+        }
+
+        // On détruit la balle après l'impact (sauf si elle touche le joueur qui l'a tirée)
+        if (!hitObject.CompareTag("Player"))
+        {
+            Destroy(gameObject);
+        }
     }
 }
