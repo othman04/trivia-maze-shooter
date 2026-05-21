@@ -216,6 +216,13 @@ namespace StarterAssets
 				{
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					// ======= AJOUT POUR LE SON DE SAUT =======
+					PlayerFootsteps footsteps = GetComponent<PlayerFootsteps>();
+					if (footsteps != null)
+					{
+						footsteps.PlayJumpSound();
+					}
+					// =========================================
 				}
 
 				// jump timeout
