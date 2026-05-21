@@ -8381,6 +8381,8 @@ MonoBehaviour:
   promptE: {fileID: 2094066336}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &198432750
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30226,6 +30228,8 @@ MonoBehaviour:
   promptE: {fileID: 1574007356}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &561623327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38212,6 +38216,8 @@ MonoBehaviour:
   promptE: {fileID: 2078539523}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &699069634
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40932,7 +40938,9 @@ MonoBehaviour:
   doorRight: {fileID: 942910036}
   promptE: {fileID: 632410963}
   slideDistance: 4
-  speed: 5
+  speed: 2
+  slidingSound: {fileID: 8300000, guid: 9e7c25fb45fced9418316621c193fbf6, type: 3}
+  volume: 1
 --- !u!1 &774995899 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100004, guid: ac93356612ce24c718977a61ed7246de,
@@ -45044,6 +45052,44 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &875107827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100014, guid: ac93356612ce24c718977a61ed7246de,
+    type: 3}
+  m_PrefabInstance: {fileID: 1409375571}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &875107829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 875107827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0
 --- !u!1 &880420829 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100008, guid: ac93356612ce24c718977a61ed7246de,
@@ -52077,6 +52123,8 @@ MonoBehaviour:
   promptE: {fileID: 1208589460}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1026836613
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -52562,6 +52610,8 @@ MonoBehaviour:
   promptE: {fileID: 1904928702}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1048019288
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -57877,6 +57927,8 @@ MonoBehaviour:
   promptE: {fileID: 1698956308}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1172770310
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -58882,6 +58934,8 @@ MonoBehaviour:
   promptE: {fileID: 1945077059}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1196828681
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -66964,6 +67018,8 @@ MonoBehaviour:
   promptE: {fileID: 711746744}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1324742572
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -69220,6 +69276,8 @@ MonoBehaviour:
   promptE: {fileID: 713129250}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1365542277
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -71158,6 +71216,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100014, guid: ac93356612ce24c718977a61ed7246de,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 875107829}
     - targetCorrespondingSourceObject: {fileID: 100012, guid: ac93356612ce24c718977a61ed7246de,
         type: 3}
       insertIndex: -1
@@ -74512,6 +74574,8 @@ MonoBehaviour:
   promptE: {fileID: 2009428369}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1465298381
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -92155,6 +92219,8 @@ MonoBehaviour:
   promptE: {fileID: 287860899}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1816329110
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -99075,6 +99141,8 @@ MonoBehaviour:
   promptE: {fileID: 1362740094}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1958479029
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -100367,8 +100435,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFootsteps
   footstepSounds:
-  - {fileID: 8300000, guid: d4265e7dc920e3c4db92e1eadc112250, type: 3}
-  timeBetweenSteps: 5
+  - {fileID: 8300000, guid: b1f38e04a8f355d4e9eadc8ec46e2f47, type: 3}
+  - {fileID: 8300000, guid: 217983054e332634b97be76ea81b97e4, type: 3}
+  - {fileID: 8300000, guid: 442b1f015a183ce4b88bb0f7258b949a, type: 3}
+  - {fileID: 8300000, guid: babbcf507a2900a4da48a674ff2ecbc3, type: 3}
+  - {fileID: 8300000, guid: 05913ccc410524544881b7bc1ac30d38, type: 3}
+  timeBetweenSteps: 0.7
   jumpSound: {fileID: 8300000, guid: 2add8ef116023b84cb1430c5bde2b237, type: 3}
 --- !u!82 &1978619971
 AudioSource:
@@ -101106,6 +101178,8 @@ MonoBehaviour:
   promptE: {fileID: 930663696}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &1990903085
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -105013,7 +105087,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 408816, guid: ee13d518658eb2140a5cf1e59a3de544, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 77.61
+      value: 96.17
       objectReference: {fileID: 0}
     - target: {fileID: 408816, guid: ee13d518658eb2140a5cf1e59a3de544, type: 3}
       propertyPath: m_LocalPosition.y
@@ -105021,7 +105095,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 408816, guid: ee13d518658eb2140a5cf1e59a3de544, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 58.94
+      value: 55.52
       objectReference: {fileID: 0}
     - target: {fileID: 408816, guid: ee13d518658eb2140a5cf1e59a3de544, type: 3}
       propertyPath: m_LocalRotation.w
@@ -106420,6 +106494,8 @@ MonoBehaviour:
   promptE: {fileID: 1759254944}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &2099636194
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107059,6 +107135,8 @@ MonoBehaviour:
   promptE: {fileID: 1650395159}
   slideDistance: 4
   speed: 5
+  slidingSound: {fileID: 0}
+  volume: 0.5
 --- !u!65 &2108697737
 BoxCollider:
   m_ObjectHideFlags: 0

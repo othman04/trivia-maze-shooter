@@ -14,6 +14,10 @@ public class SlidingDoorManager : MonoBehaviour
     public float slideDistance = 1.8f; 
     public float speed = 5f;
 
+    [Header("Audio (Ajouté)")]
+    public AudioClip slidingSound;      // Glisse ton fichier son ici
+    [Range(0f, 1f)] public float volume = 0.5f;
+
     private Vector3 initialPosLeft;
     private Vector3 initialPosRight;
     private Vector3 targetPosLeft;
@@ -21,6 +25,10 @@ public class SlidingDoorManager : MonoBehaviour
 
     private bool isPlayerInside = false;
     private bool isOpen = false;
+
+    // Variables pour la gestion audio interne
+    private AudioSource audioSource;
+    private bool wasMoving = false;
 
     void Start()
     {
@@ -31,6 +39,13 @@ public class SlidingDoorManager : MonoBehaviour
 
         // On s'assure que le texte est caché au lancement
         if(promptE != null) promptE.SetActive(false);
+
+        // --- CONFIGURATION AUDIO AUTOMATIQUE ---
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 1f; // Son en 3D (localisé sur la porte)
+        audioSource.volume = volume;
     }
 
     void Update()
@@ -42,6 +57,23 @@ public class SlidingDoorManager : MonoBehaviour
 
         doorLeft.localPosition = Vector3.Lerp(doorLeft.localPosition, targetPosLeft, Time.deltaTime * speed);
         doorRight.localPosition = Vector3.Lerp(doorRight.localPosition, targetPosRight, Time.deltaTime * speed);
+
+        // --- GESTION DU SON EN TEMPS RÉEL ---
+        // On vérifie si les portes bougent encore (si la distance vers la cible est grande)
+        bool isMovingNow = Vector3.Distance(doorLeft.localPosition, targetPosLeft) > 0.01f;
+
+        if (isMovingNow && !wasMoving)
+        {
+            // La porte commence tout juste à glisser
+            PlayDoorSound();
+        }
+        else if (!isMovingNow && wasMoving)
+        {
+            // La porte vient d'atteindre sa destination (ouverte ou fermée complètement)
+            StopDoorSound();
+        }
+
+        wasMoving = isMovingNow;
     }
 
     void ToggleDoors()
@@ -56,6 +88,25 @@ public class SlidingDoorManager : MonoBehaviour
         {
             targetPosLeft = initialPosLeft;
             targetPosRight = initialPosRight;
+        }
+    }
+
+    // --- FONCTIONS AUDIO COUTUMIERES ---
+    void PlayDoorSound()
+    {
+        if (slidingSound != null && audioSource != null)
+        {
+            audioSource.clip = slidingSound;
+            audioSource.volume = volume;
+            audioSource.Play();
+        }
+    }
+
+    void StopDoorSound()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
         }
     }
 
