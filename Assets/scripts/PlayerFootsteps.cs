@@ -4,39 +4,57 @@ public class PlayerFootsteps : MonoBehaviour
 {
     [Header("Footsteps Audio")]
     public AudioClip[] footstepSounds;
-    public float timeBetweenSteps = 0.5f; 
+    public float timeBetweenSteps = 0.5f;
 
-    [Header("Jump Audio")]
+    [Header("Jump & Land Audio")]
     public AudioClip jumpSound;
+    public AudioClip landSound;
 
-    private AudioSource footstepAudioSource; // Canal 1 : Dédié aux pas
-    private AudioSource jumpAudioSource;     // Canal 2 : Dédié au saut
-    
+    [Header("Water Audio")]
+    public AudioClip waterAmbientSound;
+    public AudioClip waterJumpSound;
+    public AudioClip waterLandSound;
+
+    [Header("Water Threshold")]
+    public float waterYThreshold = 0f;
+
+    private AudioSource footstepAudioSource;
+    private AudioSource jumpAudioSource;
+    private AudioSource waterAudioSource;
     private CharacterController controller;
     private float stepTimer = 0f;
+    private bool wasGrounded = true;
+    private bool jumpedFromWater = false;
+
+    bool IsInWater()
+    {
+        float feetY = transform.position.y - (controller.height / 2f);
+        return feetY <= waterYThreshold;
+    }
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
 
-        // --- CONFIGURATION AUTOMATIQUE DES DEUX CANAUX ---
-        // On crée le premier canal pour les pas
         footstepAudioSource = gameObject.AddComponent<AudioSource>();
         footstepAudioSource.playOnAwake = false;
         footstepAudioSource.loop = false;
 
-        // On crée le deuxième canal pour le saut
         jumpAudioSource = gameObject.AddComponent<AudioSource>();
         jumpAudioSource.playOnAwake = false;
         jumpAudioSource.loop = false;
-        
-        // Optionnel : Si vous aviez déjà un composant AudioSource sur l'objet, 
-        // on copie son volume pour que ce soit propre
+
+        waterAudioSource = gameObject.AddComponent<AudioSource>();
+        waterAudioSource.playOnAwake = false;
+        waterAudioSource.loop = true;
+        waterAudioSource.clip = waterAmbientSound;
+
         AudioSource originalSource = GetComponent<AudioSource>();
-        if (originalSource != null && originalSource != footstepAudioSource && originalSource != jumpAudioSource)
+        if (originalSource != null && originalSource != footstepAudioSource && originalSource != jumpAudioSource && originalSource != waterAudioSource)
         {
             footstepAudioSource.volume = originalSource.volume;
             jumpAudioSource.volume = originalSource.volume;
+            waterAudioSource.volume = originalSource.volume;
         }
     }
 
@@ -44,59 +62,79 @@ public class PlayerFootsteps : MonoBehaviour
     {
         if (controller == null || footstepAudioSource == null) return;
 
-        // 1. Calcul de la vitesse au sol (X et Z uniquement)
+        // Water ambient loop
+        if (IsInWater())
+        {
+            if (!waterAudioSource.isPlaying)
+                waterAudioSource.Play();
+        }
+        else
+        {
+            if (waterAudioSource.isPlaying)
+                waterAudioSource.Stop();
+        }
+
         Vector3 horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
         float currentSpeed = horizontalVelocity.magnitude;
-
-        // Seuil de détection de marche
         bool isMovingReal = currentSpeed > 1.2f;
 
-        if (controller.isGrounded && isMovingReal)
+        // Landing detection
+        if (!wasGrounded && controller.isGrounded)
+        {
+            if (jumpedFromWater || IsInWater())
+            {
+                if (waterLandSound != null)
+                    jumpAudioSource.PlayOneShot(waterLandSound);
+            }
+            else
+            {
+                if (landSound != null)
+                    jumpAudioSource.PlayOneShot(landSound);
+            }
+            jumpedFromWater = false;
+        }
+
+        wasGrounded = controller.isGrounded;
+
+        // Footsteps on land only
+        if (controller.isGrounded && isMovingReal && !IsInWater())
         {
             stepTimer += Time.deltaTime;
 
             float currentStepDelay = timeBetweenSteps;
-            
-            // Si le joueur court, on accélère le rythme
-            if (currentSpeed > 5.0f) 
-            {
-                currentStepDelay = timeBetweenSteps * 0.6f; 
-            }
+            if (currentSpeed > 5.0f)
+                currentStepDelay = timeBetweenSteps * 0.6f;
 
             if (stepTimer >= currentStepDelay)
             {
                 PlayFootstepSound();
-                stepTimer = 0f; 
+                stepTimer = 0f;
             }
         }
         else
         {
             stepTimer = 0f;
-            
-            // On coupe UNIQUEMENT le canal des pas quand on s'arrête ou qu'on saute.
-            // Le canal du saut, lui, reste libre de jouer !
-            if (footstepAudioSource.isPlaying)
-            {
-                footstepAudioSource.Stop(); 
-            }
+            if (footstepAudioSource.isPlaying && !IsInWater())
+                footstepAudioSource.Stop();
         }
     }
 
     public void PlayFootstepSound()
     {
-        if (footstepSounds.Length == 0 || footstepAudioSource == null) return;
+        if (footstepAudioSource == null || footstepSounds.Length == 0) return;
 
-        int randomIndex = Random.Range(0, footstepSounds.Length);
-        footstepAudioSource.PlayOneShot(footstepSounds[randomIndex]);
+        int i = Random.Range(0, footstepSounds.Length);
+        footstepAudioSource.clip = footstepSounds[i];
+        footstepAudioSource.Play();
     }
 
-    // Cette fonction est appelée par le script FirstPersonController d'Unity au moment du saut
     public void PlayJumpSound()
     {
-        if (jumpSound != null && jumpAudioSource != null)
-        {
-            // On utilise le canal dédié au saut, totalement indépendant de la marche !
+        jumpedFromWater = IsInWater();
+
+        if (jumpedFromWater && waterJumpSound != null)
+            jumpAudioSource.PlayOneShot(waterJumpSound);
+        else if (jumpSound != null)
             jumpAudioSource.PlayOneShot(jumpSound);
-        }
     }
 }
