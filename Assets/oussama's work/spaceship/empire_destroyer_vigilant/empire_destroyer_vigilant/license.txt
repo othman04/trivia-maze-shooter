@@ -1,0 +1,11 @@
+Model Information:
+* title:	Empire destroyer Vigilant
+* source:	https://sketchfab.com/3d-models/empire-destroyer-vigilant-c776713d096f4b38b2e8ffab68d50f97
+* author:	Star Conflict (https://sketchfab.com/star_conflict)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Empire destroyer Vigilant" (https://sketchfab.com/3d-models/empire-destroyer-vigilant-c776713d096f4b38b2e8ffab68d50f97) by Star Conflict (https://sketchfab.com/star_conflict) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
