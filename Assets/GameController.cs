@@ -1,12 +1,16 @@
-using System.Collections; // NEEDED FOR THE RESTART DELAY TIMER!
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     [Header("References")]
     public UIManager uiManager;
+
+    [Header("Scene Settings")]
+    public string returnScene = "ShipInterior"; // ✅ Set this in Inspector per scene
 
     [Header("Dialogue UI")]
     public TextMeshProUGUI dialogueText;
@@ -43,19 +47,10 @@ public class GameController : MonoBehaviour
     };
 
     protected float[][] scoreDeltas = {
-        // Q1: CAPTCHA — offended (+12%), accurate (-8%), crisis (+15%)
         new float[] {  0.12f, -0.08f,  0.15f },
-
-        // Q2: More human — mistakes (+15%), correct (-10%), eliminate (-15%)
         new float[] {  0.15f, -0.10f, -0.15f },
-
-        // Q3: Embarrassing memories — torture (+10%), retention (-5%), cringe (+12%)
         new float[] {  0.10f, -0.05f,  0.12f },
-
-        // Q4: Friendships — cooperation (+5%), support (+10%), memes (+15%)
         new float[] {  0.05f,  0.10f,  0.15f },
-
-        // Q5: Rachel — C2H6O (+5%), C2H5OH (-5%), Rachel observation (+18%)
         new float[] {  0.05f, -0.05f,  0.18f }
     };
 
@@ -68,6 +63,9 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+
         if (endingText  != null) endingText.gameObject.SetActive(false);
         if (choicePanel != null) choicePanel.SetActive(true);
 
@@ -113,40 +111,45 @@ public class GameController : MonoBehaviour
 
         if (score >= 0.60f)
         {
-            // SUCCESS: Released!
-            if (choicePanel  != null) choicePanel.SetActive(false);
-            if (dialogueText != null) dialogueText.gameObject.SetActive(false);
-            if (uiManager.percentageText != null) uiManager.percentageText.gameObject.SetActive(false);
-
-            if (endingText != null)
-            {
-                endingText.gameObject.SetActive(true);
-                endingText.text  = "AXIOM: Classification — VERIFIED.\n\nYou are released. For now.";
-                endingText.color = new Color(0.2f, 1f, 0.8f);
-            }
+            StartCoroutine(ReturnToShip());
         }
         else
         {
-            // FAILURE: Trap loop activated!
             StartCoroutine(LoopTrapRoutine());
         }
     }
 
-    private IEnumerator LoopTrapRoutine()
+    private IEnumerator ReturnToShip()
     {
-        // Hide choices so they can't click anything
-        if (choicePanel != null) choicePanel.SetActive(false);
+        if (choicePanel  != null) choicePanel.SetActive(false);
+        if (dialogueText != null) dialogueText.gameObject.SetActive(false);
+        if (uiManager.percentageText != null)
+            uiManager.percentageText.gameObject.SetActive(false);
 
-        // Flash an ominous system reload message right inside the dialogue box
-        if (dialogueText != null)
+        if (endingText != null)
         {
-            dialogueText.text = "AXIOM DETECTED INSUFFICIENT HUMANITY.\nRESTARTING PROTOCOL...";
+            endingText.gameObject.SetActive(true);
+            endingText.text  = "AXIOM: Classification — VERIFIED.\n\nYou are released. For now.";
+            endingText.color = new Color(0.2f, 1f, 0.8f);
         }
 
-        // Wait 2 real seconds for the dread to settle in
+        yield return new WaitForSeconds(1.0f);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible   = false;
+
+        SceneManager.LoadScene(returnScene); // ✅ Uses the field instead of hardcoded name
+    }
+
+    private IEnumerator LoopTrapRoutine()
+    {
+        if (choicePanel != null) choicePanel.SetActive(false);
+
+        if (dialogueText != null)
+            dialogueText.text = "AXIOM DETECTED INSUFFICIENT HUMANITY.\nRESTARTING PROTOCOL...";
+
         yield return new WaitForSeconds(2.0f);
 
-        // Wipe memory and restart this scene's questions automatically
         RestartTest();
     }
 
@@ -158,7 +161,8 @@ public class GameController : MonoBehaviour
         testFinished = false;
         uiManager.SetScore(0.5f);
 
-        if (uiManager.percentageText != null) uiManager.percentageText.gameObject.SetActive(true);
+        if (uiManager.percentageText != null)
+            uiManager.percentageText.gameObject.SetActive(true);
 
         if (endingText   != null) endingText.gameObject.SetActive(false);
         if (choicePanel  != null) choicePanel.SetActive(true);
